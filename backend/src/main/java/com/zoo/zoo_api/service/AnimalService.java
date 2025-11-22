@@ -60,7 +60,7 @@ public class AnimalService {
                 .birthDate(request.birthDate())
                 .species(getSpecies(request.speciesId()))
                 .habitat(getHabitat(request.habitatId()))
-                .birthPlace(getCountry(request.birthPlaceId()))
+                .birthPlace(request.birthPlaceId() != null ? getCountry(request.birthPlaceId()) : null)
                 .build();
 
         return toResponse(animalRepository.save(animal));
@@ -76,7 +76,7 @@ public class AnimalService {
         animal.setBirthDate(request.birthDate());
         animal.setSpecies(getSpecies(request.speciesId()));
         animal.setHabitat(getHabitat(request.habitatId()));
-        animal.setBirthPlace(getCountry(request.birthPlaceId()));
+        animal.setBirthPlace(request.birthPlaceId() != null ? getCountry(request.birthPlaceId()) : null);
 
         return toResponse(animalRepository.save(animal));
     }
@@ -89,8 +89,15 @@ public class AnimalService {
         animalRepository.deleteById(id);
     }
 
-    // === Mapeamento Entity → DTO ===
     private AnimalResponse toResponse(Animal a) {
+        CountryResponse countryResponse = null;
+        if (a.getBirthPlace() != null) {
+            countryResponse = new CountryResponse(
+                    a.getBirthPlace().getId(),
+                    a.getBirthPlace().getName()
+            );
+        }
+
         return new AnimalResponse(
                 a.getId(),
                 a.getName(),
@@ -99,7 +106,7 @@ public class AnimalService {
                 a.getRegistrationDate(),
                 new SpeciesResponse(a.getSpecies().getId(), a.getSpecies().getName()),
                 new HabitatResponse(a.getHabitat().getId(), a.getHabitat().getName(), a.getHabitat().getDescription()),
-                new CountryResponse(a.getBirthPlace().getId(), a.getBirthPlace().getName())
+                countryResponse
         );
     }
 

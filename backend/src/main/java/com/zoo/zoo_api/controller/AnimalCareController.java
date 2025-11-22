@@ -23,6 +23,11 @@ public class AnimalCareController {
         return service.findAll(animalId);
     }
 
+    @GetMapping("/animal/{animalId}")
+    public List<AnimalCareResponse> findByAnimalId(@PathVariable Integer animalId) {
+        return service.findByAnimalId(animalId);
+    }
+
     @GetMapping("/{id}")
     public AnimalCareResponse findById(@PathVariable Integer id) {
         return service.findById(id);

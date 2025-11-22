@@ -12,5 +12,5 @@ public record AnimalRequest(
 
         @NotNull Integer speciesId,
         @NotNull Integer habitatId,
-        @NotNull Integer birthPlaceId
+        Integer birthPlaceId
 ) { }

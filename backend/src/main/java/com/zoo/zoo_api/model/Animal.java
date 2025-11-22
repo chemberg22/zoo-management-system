@@ -30,7 +30,7 @@ public class Animal {
     @Size(max = 512)
     private String description;
 
-    private LocalDate birthDate; // pode ser null
+    private LocalDate birthDate;
 
     @NotNull(message = "Species is required!")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,9 +42,8 @@ public class Animal {
     @JoinColumn(name = "HabitatId", nullable = false)
     private Habitat habitat;
 
-    @NotNull(message = "Birth place is required!")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BirthPlaceId", nullable = false)
+    @JoinColumn(name = "BirthPlaceId", nullable = true)
     private Country birthPlace;
 
     @Column(nullable = false, updatable = false)

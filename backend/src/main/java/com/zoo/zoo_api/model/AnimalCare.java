@@ -31,9 +31,9 @@ public class AnimalCare {
     @JoinColumn(name = "CareTypeId", nullable = false)
     private CareType careType;
 
-    @NotNull
+    @NotNull(message = "Realization date is required!")
     @Column(nullable = false)
-    private LocalDate realizationDate = LocalDate.now();
+    private LocalDate realizationDate;
 
     @Size(max = 1024)
     private String observations;

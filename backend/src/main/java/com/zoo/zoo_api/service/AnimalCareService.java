@@ -33,6 +33,13 @@ public class AnimalCareService {
         return cares.stream().map(this::toResponse).toList();
     }
 
+    public List<AnimalCareResponse> findByAnimalId(Integer animalId) {
+        return repository.findByAnimalIdOrderByRealizationDateDesc(animalId)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     public AnimalCareResponse findById(Integer id) {
         return repository.findById(id)
                 .map(this::toResponse)
