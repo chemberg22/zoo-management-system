@@ -13,24 +13,29 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class CareTypeService {
 
+    // Link for care types repository
     private final CareTypeRepository repository;
 
+    // Imutable
     public CareTypeService(CareTypeRepository repository) {
         this.repository = repository;
     }
 
+    // Return all care types. Entities > map to DTO > to List
     public List<CareTypeResponse> findAll() {
         return repository.findAll().stream()
                 .map(this::toResponse)
                 .toList();
     }
 
+    // Return care type by ID. If exists > map to Response
     public CareTypeResponse findById(Integer id) {
         return repository.findById(id)
                 .map(this::toResponse)
                 .orElseThrow(() -> new EntityNotFoundException("Care type not found: " + id));
     }
 
+    // Creates a new care type using Lombok builder, persists in database and return the DTO response
     @Transactional
     public CareTypeResponse create(CareTypeRequest request) {
         CareType careType = CareType.builder()
@@ -41,6 +46,7 @@ public class CareTypeService {
         return toResponse(repository.save(careType));
     }
 
+    // Update an existing care type verifying its existence by ID, persists in database and return the DTO response
     @Transactional
     public CareTypeResponse update(Integer id, CareTypeRequest request) {
         CareType careType = repository.findById(id)
@@ -48,9 +54,11 @@ public class CareTypeService {
         careType.setName(request.name());
         careType.setDescription(request.description());
         careType.setFrequency(request.frequency());
+
         return toResponse(repository.save(careType));
     }
 
+    // Delete an existing care type verifying its existence by ID and update the database
     @Transactional
     public void delete(Integer id) {
         if (!repository.existsById(id)) {
@@ -59,7 +67,12 @@ public class CareTypeService {
         repository.deleteById(id);
     }
 
+    // Entity > DTO
     private CareTypeResponse toResponse(CareType c) {
-        return new CareTypeResponse(c.getId(), c.getName(), c.getDescription(), c.getFrequency());
+        return new CareTypeResponse(
+                c.getId(),
+                c.getName(),
+                c.getDescription(),
+                c.getFrequency());
     }
 }

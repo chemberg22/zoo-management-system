@@ -13,12 +13,15 @@ import java.util.List;
 @RequestMapping("/api/habitats")
 public class HabitatController {
 
+    // Link to habitat service
     private final HabitatService service;
 
+    // Imutable
     public HabitatController(HabitatService service) {
         this.service = service;
     }
 
+    // GET method to list all habitats
     @GetMapping
     public ResponseEntity<List<Habitat>> findAllHabitats() {
         List<Habitat> habitat = service.findAll();

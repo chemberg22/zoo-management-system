@@ -13,12 +13,15 @@ import java.util.List;
 @RequestMapping("/api/countries")
 public class CountryController {
 
+    // Link to country service
     private final CountryService service;
 
+    // Imutable
     public CountryController(CountryService service) {
         this.service = service;
     }
 
+    // GET method to list all countries
     @GetMapping
     public ResponseEntity<List<Country>> findAllCountries() {
         List<Country> country = service.findAll();

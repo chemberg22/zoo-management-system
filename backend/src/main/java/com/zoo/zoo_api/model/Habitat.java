@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Entity
-@Table(name = "Habitat")
+@Table(name = "habitats")
 
 @Getter
 @Setter
@@ -16,15 +16,18 @@ import lombok.*;
 
 public class Habitat {
 
+    // ID generated sequentially
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    // Habitat name required, max 64
     @NotBlank(message = "Habitat name is required!")
     @Size(max = 64)
     @Column(nullable = false)
     private String name;
 
+    // Description not required, max 512
     @Size(max = 512)
     private String description;
 }

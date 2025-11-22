@@ -10,9 +10,11 @@ import java.util.List;
 @Service
 public class SpeciesService {
 
+    // Link to species repository
     @Autowired
     private SpeciesRepository repository;
 
+    // Return all species
     public List<Species> findAll() {
         return repository.findAll();
     }

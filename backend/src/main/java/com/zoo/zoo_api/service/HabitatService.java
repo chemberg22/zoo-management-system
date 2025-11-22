@@ -10,9 +10,11 @@ import java.util.List;
 @Service
 public class HabitatService {
 
+    // Link to habitats repository
     @Autowired
     private HabitatRepository repository;
 
+    // Return all habitats
     public List<Habitat> findAll() {
         return repository.findAll();
     }
