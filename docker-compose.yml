@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   # Database SQL Server
   db:
@@ -10,23 +8,31 @@ services:
       MSSQL_PID: "Express"
     ports:
       - "1433:1433"
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 220571 -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
 
-  # Backend (Spring Boot)
-  backend:
+  # Backend Spring Boot
+  api:
     build: ./backend
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:sqlserver://db:1433;databaseName=ZooDB;encrypt=false;trustServerCertificate=true
       SPRING_DATASOURCE_USERNAME: sa
       SPRING_DATASOURCE_PASSWORD: 220571
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
 
-  # Frontend (React w/ Vite)
-  frontend:
+  # Frontend React/Vite
+  web:
     build: ./frontend
     ports:
       - "80:80"
     depends_on:
-      - backend
+      - api
