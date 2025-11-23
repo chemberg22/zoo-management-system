@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../services/api'
-import '../styles/Animals.css'
+import '../styles/animals.css'
 
 function Animals() {
   // Animals list by API
