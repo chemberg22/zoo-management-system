@@ -6,7 +6,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "SuaSenha123"
+      SA_PASSWORD: "220571"
       MSSQL_PID: "Express"
     ports:
       - "1433:1433"
@@ -21,7 +21,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:sqlserver://db:1433;databaseName=ZooDB;encrypt=false;trustServerCertificate=true
       SPRING_DATASOURCE_USERNAME: sa
-      SPRING_DATASOURCE_PASSWORD: SuaSenha123
+      SPRING_DATASOURCE_PASSWORD: 220571
 
   # Frontend (React w/ Vite)
   frontend:
