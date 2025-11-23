@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  # Database SQL Server
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "SuaSenha123"
+      MSSQL_PID: "Express"
+    ports:
+      - "1433:1433"
+
+  # Backend (Spring Boot)
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:sqlserver://db:1433;databaseName=ZooDB;encrypt=false;trustServerCertificate=true
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: SuaSenha123
+
+  # Frontend (React w/ Vite)
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
