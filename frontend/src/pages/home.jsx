@@ -15,11 +15,11 @@ function Home() {
           </div>
 
           <div className="menu-item">
-            <Link to="/care-types">Cuidados</Link>
+            <Link to="/care-types">Tipos de Cuidados</Link>
           </div>
 
           <div className="menu-item">
-            <Link to="/cares">Histórico</Link>
+            <Link to="/cares">Cuidados Realizados</Link>
           </div>
         </section>
       </main>

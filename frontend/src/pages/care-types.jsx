@@ -4,19 +4,25 @@ import api from '../services/api'
 import '../styles/animals.css'
 
 function CareTypes() {
+  // Care types list by API
   const [careTypes, setCareTypes] = useState([])
+  // Loading state
   const [loading, setLoading] = useState(true)
+  // Search field state
   const [search, setSearch] = useState('')
 
+  // Modal control creation/edit
   const [showModal, setShowModal] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
   const [editingId, setEditingId] = useState(null)
 
+  // Care type form data
   const [formData, setFormData] = useState({
     name: '',
     frequency: ''
   })
 
+  // Fetch care types with API data with optional filters
   const fetchCareTypes = async () => {
     try {
       const params = {}
@@ -25,16 +31,18 @@ function CareTypes() {
       setCareTypes(res.data)
       setLoading(false)
     } catch (err) {
-      console.error('Erro ao carregar tipos de cuidado:', err)
+      console.error('Error loading care types:', err)
       alert('Erro ao carregar tipos de cuidado')
       setLoading(false)
     }
   }
 
+  // Reload care types list on filter change
   useEffect(() => {
     fetchCareTypes()
   }, [search])
 
+  // Opens modal in creation mode
   const openCreateModal = () => {
     setIsEditMode(false)
     setEditingId(null)
@@ -42,6 +50,7 @@ function CareTypes() {
     setShowModal(true)
   }
 
+  // Opens modal in editing mode
   const openEditModal = (careType) => {
     setIsEditMode(true)
     setEditingId(careType.id)
@@ -52,6 +61,7 @@ function CareTypes() {
     setShowModal(true)
   }
 
+  // Deletes an existing care type
   const handleDelete = async (id, name) => {
     if (!window.confirm(`Tem certeza que deseja excluir o tipo de cuidado "${name}"?`)) return
 
@@ -64,6 +74,7 @@ function CareTypes() {
     }
   }
 
+  // Submit creation/edit care type form with validations
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -77,6 +88,7 @@ function CareTypes() {
     }
 
     try {
+      // Defines object sent to API
       const payload = {
         name: formData.name.trim(),
         frequency: parseInt(formData.frequency)

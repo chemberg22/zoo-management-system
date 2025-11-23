@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// Configuração centralizada do Axios
+// Centralized axios configuration
 const api = axios.create({
   baseURL: 'http://localhost:8080/api',
   timeout: 10000, 
@@ -9,21 +9,21 @@ const api = axios.create({
   },
 })
 
-// Interceptor pra mostrar erros
+// Interceptor to show errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
-      // Erro retornado pelo backend
-      console.error('Erro na API:', error.response.data)
-      alert(`Erro: ${error.response.data.message || 'Algo deu errado'}`)
+      // Backend returned error
+      console.error('API error:', error.response.data)
+      alert(`Error: ${error.response.data.message || 'Something gone wrong!'}`)
     } else if (error.request) {
-      // Sem resposta
-      console.error('Backend não respondeu:', error.request)
-      alert('Não foi possível conectar ao servidor. Verifique se o backend está rodando.')
+      // No response
+      console.error('Backend not responding:', error.request)
+      alert('Verify the backend!')
     } else {
       console.error('Erro:', error.message)
-      alert('Erro inesperado')
+      alert('Unexpected error!')
     }
     return Promise.reject(error)
   }

@@ -4,25 +4,34 @@ import api from '../services/api'
 import '../styles/animals.css'
 
 function Cares() {
+  // Animals list by API
   const [animals, setAnimals] = useState([])
+  // Loading state
   const [loading, setLoading] = useState(true)
+  // Search field state
   const [search, setSearch] = useState('')
 
+  // Selected animal
   const [selectedAnimal, setSelectedAnimal] = useState(null)
+  // Care list by specific animal
   const [animalCares, setAnimalCares] = useState([])
 
+  // Modal control creation/edit
   const [showCareModal, setShowCareModal] = useState(false)
   const [isEditCare, setIsEditCare] = useState(false)
   const [editingCareId, setEditingCareId] = useState(null)
 
+  // Care form data
   const [careForm, setCareForm] = useState({
     careTypeId: '',
     realizationDate: new Date().toISOString().split('T')[0],
     observations: ''
   })
 
+  // Animal care list <select>
   const [careTypes, setCareTypes] = useState([])
 
+  // Fetch animals with API data with name filter
   const fetchAnimals = async () => {
     try {
       const params = search.trim() ? { name: search.trim() } : {}
@@ -35,6 +44,7 @@ function Cares() {
     }
   }
 
+  // Fetch animal cares with API data to an especific animal (by ID)
   const fetchAnimalCares = async (animalId) => {
     try {
       const res = await api.get(`/animal-cares/animal/${animalId}`)
@@ -45,6 +55,7 @@ function Cares() {
     }
   }
 
+  // Load care types with API data
   const loadCareTypes = async () => {
     try {
       const res = await api.get('/care-types')
@@ -54,20 +65,24 @@ function Cares() {
     }
   }
 
+  // Reload animals list on filter change
   useEffect(() => {
     fetchAnimals()
   }, [search])
 
+  // Opens animals care modal by animal ID
   const openAnimalCares = (animal) => {
     setSelectedAnimal(animal)
     fetchAnimalCares(animal.id)
   }
 
+  // Closes animals care modal
   const closeAnimalModal = () => {
     setSelectedAnimal(null)
     setAnimalCares([])
   }
 
+  // Opens modal to a new care
   const openNewCare = () => {
     setIsEditCare(false)
     setEditingCareId(null)
@@ -80,6 +95,7 @@ function Cares() {
     setShowCareModal(true)
   }
 
+  // Opens modal to edit an existing care type
   const openEditCare = (care) => {
     setIsEditCare(true)
     setEditingCareId(care.id)
@@ -92,6 +108,7 @@ function Cares() {
     setShowCareModal(true)
   }
 
+  // Deletes a animal care
   const deleteCare = async (careId, careName) => {
     if (!window.confirm(`Excluir o cuidado "${careName}"?`)) return
     try {
@@ -103,6 +120,7 @@ function Cares() {
     }
   }
 
+  // Submit creation/edit care form with validations
   const handleCareSubmit = async (e) => {
     e.preventDefault()
     if (!careForm.careTypeId) {
@@ -116,6 +134,7 @@ function Cares() {
       return
     }
 
+    // Defines object sent to API
     try {
       const payload = {
         animalId: selectedAnimal.id,
@@ -312,7 +331,6 @@ function Cares() {
                   rows="5"
                   value={careForm.observations}
                   onChange={e => setCareForm({...careForm, observations: e.target.value})}
-                  placeholder="Detalhes do procedimento, reações do animal, medicamentos usados..."
                 />
               </div>
 

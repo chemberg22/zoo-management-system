@@ -4,18 +4,25 @@ import api from '../services/api'
 import '../styles/Animals.css'
 
 function Animals() {
+  // Animals list by API
   const [animais, setAnimais] = useState([])
+  // Loading state
   const [loading, setLoading] = useState(true)
 
+  // Filters list state
   const [search, setSearch] = useState('')
   const [especieFilter, setEspecieFilter] = useState('')
   const [habitatFilter, setHabitatFilter] = useState('')
-  const [countryFilter, setCountryFilter] = useState('') // NOVO: filtro por país
+  const [countryFilter, setCountryFilter] = useState('')
 
+  // Modal control
   const [showModal, setShowModal] = useState(false)
+  // Edit/Create mode
   const [isEditMode, setIsEditMode] = useState(false)
+  // Store animal ID being edited
   const [editingAnimalId, setEditingAnimalId] = useState(null)
 
+  // Modal form data
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -26,10 +33,12 @@ function Animals() {
     registrationDate: new Date().toISOString().split('T')[0]
   })
 
+  // Loaded lists for modal <selects>
   const [species, setSpecies] = useState([])
   const [habitats, setHabitats] = useState([])
   const [countries, setCountries] = useState([])
 
+  // Fetch animals by API data with optional filters
   const fetchAnimais = async () => {
     try {
       const params = {}
@@ -38,12 +47,13 @@ function Animals() {
       setAnimais(res.data)
       setLoading(false)
     } catch (err) {
-      console.error('Erro ao carregar animais:', err)
-      alert('Erro ao carregar animais')
+      console.error('Error loading animals:', err)
+      alert('Erro ao carregar animais!')
       setLoading(false)
     }
   }
 
+  // Load reference list only when modal is open
   useEffect(() => {
     if (showModal) {
       const loadReferences = async () => {
@@ -64,10 +74,12 @@ function Animals() {
     }
   }, [showModal])
 
+  // Reload animals list when text filter changes
   useEffect(() => {
     fetchAnimais()
   }, [search])
 
+  // Apply local filters in animals loaded list
   const animaisFiltrados = animais.filter(animal => {
     const matchEspecie = !especieFilter || animal.species?.name === especieFilter
     const matchHabitat = !habitatFilter || animal.habitat?.name === habitatFilter
@@ -75,9 +87,11 @@ function Animals() {
     return matchEspecie && matchHabitat && matchCountry
   })
 
+  // Opens the creation modal
   const openCreateModal = () => {
     setIsEditMode(false)
     setEditingAnimalId(null)
+    // Clears form
     setFormData({
       name: '',
       description: '',
@@ -90,6 +104,7 @@ function Animals() {
     setShowModal(true)
   }
 
+  // Opens the edit modal with animal data by API
   const openEditModal = (animal) => {
     setIsEditMode(true)
     setEditingAnimalId(animal.id)
@@ -105,6 +120,7 @@ function Animals() {
     setShowModal(true)
   }
 
+  // Deletes animal
   const handleDelete = async (id, name) => {
     if (!window.confirm(`Tem certeza que deseja excluir o animal "${name}"?`)) return
 
@@ -117,6 +133,7 @@ function Animals() {
     }
   }
 
+  // Valid the birthdate
   const handleBirthDateChange = (e) => {
     const selectedDate = e.target.value
     const today = new Date().toISOString().split('T')[0]
@@ -129,14 +146,17 @@ function Animals() {
     setFormData({ ...formData, birthDate: selectedDate })
   }
 
+  // Submit creation/edit form
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    // Valid data
     if (!formData.name || !formData.description || !formData.speciesId || !formData.habitatId) {
       alert('Preencha nome, descrição, espécie e habitat!')
       return
     }
 
+    // Valid birthdate
     if (formData.birthDate) {
       const today = new Date().toISOString().split('T')[0]
       if (formData.birthDate > today) {
@@ -146,6 +166,7 @@ function Animals() {
     }
 
     try {
+      // Format sent to API
       const payload = {
         name: formData.name.trim(),
         description: formData.description.trim(),
@@ -155,10 +176,13 @@ function Animals() {
         birthPlaceId: formData.countryId ? parseInt(formData.countryId) : null
       }
 
+      // Update mode
       if (isEditMode) {
         await api.put(`/animals/${editingAnimalId}`, payload)
         alert('Animal atualizado com sucesso!')
-      } else {
+      }
+      // Create mode
+      else {
         await api.post('/animals', payload)
         alert('Animal cadastrado com sucesso!')
       }
