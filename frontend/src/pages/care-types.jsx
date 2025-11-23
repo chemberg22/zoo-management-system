@@ -19,7 +19,8 @@ function CareTypes() {
   // Care type form data
   const [formData, setFormData] = useState({
     name: '',
-    frequency: ''
+    frequency: '',
+    description: ''
   })
 
   // Fetch care types with API data with optional filters
@@ -56,7 +57,8 @@ function CareTypes() {
     setEditingId(careType.id)
     setFormData({
       name: careType.name || '',
-      frequency: careType.frequency?.toString() || ''
+      frequency: careType.frequency?.toString() || '',
+      description: careType.description || ''
     })
     setShowModal(true)
   }
@@ -91,6 +93,7 @@ function CareTypes() {
       // Defines object sent to API
       const payload = {
         name: formData.name.trim(),
+        description: formData.description.trim(),
         frequency: parseInt(formData.frequency)
       }
 
@@ -135,6 +138,7 @@ function CareTypes() {
             <tr>
               <th>Tipo de Cuidado</th>
               <th>Frequência (dias)</th>
+              <th>Descrição</th>
               <th>Ações</th>
             </tr>
           </thead>
@@ -150,6 +154,7 @@ function CareTypes() {
                 <tr key={ct.id}>
                   <td><strong>{ct.name}</strong></td>
                   <td>{ct.frequency} dia{ct.frequency > 1 ? 's' : ''}</td>
+                  <td>{ct.description || '-'}</td>
                   <td>
                     <button className="edit-button" onClick={() => openEditModal(ct)}>
                       Editar
@@ -181,6 +186,17 @@ function CareTypes() {
                   required
                   value={formData.name}
                   onChange={e => setFormData({...formData, name: e.target.value})}
+                />
+              </div>
+
+              <div className="data-item">
+                <span className="data-label">Descrição:</span>
+                <textarea
+                  className="data-input"
+                  maxLength={256}
+                  value={formData.description}
+                  onChange={e => setFormData({ ...formData, description: e.target.value })}
+                  style={{resize:'vertical', minHeight:'60px'}}
                 />
               </div>
 
